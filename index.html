@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelTip</title>
@@ -14,10 +15,22 @@
     <button onclick="onPanTo()"class="btn-pan">Pan Map to Tokyo</button>
 
     <p>You are at: <span class="user-pos"></span></p>
-    <p>Locations: 
+    <p class="locations">Locations: 
         <pre class="locs"></pre>
+        <table class="location-table" hidden>
+                <thead>
+                    <tr>
+                        <th class="name">Name</th>
+                        <th class="lat">Lat</th>
+                        <th class="lng">Lng</th>
+                        <th class="actions">actions</th>
+                    </tr>
+                </thead>
+                <tbody class="info">
+                    
+                </tbody>
+        </table>
     </p>
-    
 
     <script type="module" src="js/app.controller.js"></script>
 </body>
