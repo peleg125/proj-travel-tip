@@ -114,10 +114,19 @@ function onMapClick(clickedLatLng) {
   }
 }
 function onDelete(id) {
-  locService.deleteLocation(id).then((data) => {
-    console.log("Successfully deleted", data)
-  })
+  locService
+    .deleteLocation(id)
+    .then(() => {
+      return locService.getLocations()
+    })
+    .then((locs) => {
+      renderTable(locs)
+    })
+    .catch((error) => {
+      console.error("Operation failed:", error)
+    })
 }
+
 function onCopyLink() {
   getPosition()
     .then(

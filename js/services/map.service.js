@@ -10,13 +10,18 @@ export const mapService = {
 import { locService } from "./loc.service.js"
 var gMap
 
-function initMap(lat = 32.0749831, lng = 34.9120554) {
+function initMap(lat = 32.0749831, lng = 34.9120554, onMapClick) {
   console.log("InitMap")
   return _connectGoogleApi().then(() => {
     console.log("google available")
     gMap = new google.maps.Map(document.querySelector("#map"), {
       center: { lat, lng },
       zoom: 15,
+    })
+    gMap.addListener("click", (mapsMouseEvent) => {
+      if (onMapClick) {
+        onMapClick(mapsMouseEvent.latLng.toJSON())
+      }
     })
     console.log("Map!", gMap)
   })
