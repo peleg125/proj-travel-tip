@@ -56,10 +56,12 @@ function onGetUserPos() {
       console.log("err!!!", err)
     })
 }
+
 function onPanTo() {
   console.log("Panning the Map")
   mapService.panTo(35.6895, 139.6917)
 }
+
 function renderTable(locs) {
   var strHtmls = locs.map((loc) => {
     return `
@@ -82,7 +84,10 @@ function onGoTo(lat, lng) {
   mapService.panTo(lat, lng)
 }
 function onSearch(ev) {
-  const elInputSearch = document.querySelector("input")
+  if (ev) ev.preventDefault()
+  console.log("test")
+  const elInputSearch = document.querySelector("#search-address")
+  mapService.getLocationByAddress(elInputSearch.value)
 }
 function onMapClick(clickedLatLng) {
   const { lat, lng } = clickedLatLng
