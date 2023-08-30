@@ -83,12 +83,22 @@ function renderTable(locs) {
   elLocations.innerHTML = strHtmls.join("")
   elLocations.hidden = false
 }
+
 function onGoTo(lat, lng) {
   mapService.panTo(lat, lng)
 }
+
 function onSearch(ev) {
-  const elInputSearch = document.querySelector("input")
+  if (ev) ev.preventDefault()
+  const elInputSearch = document.querySelector("#search-address")
+  console.log(ev)
+  console.log("test")
+  mapService.getLocationByAddress(elInputSearch.value).then((location) => {
+    console.log(location.lat)
+    mapService.panTo(location.lat, location.lng)
+  })
 }
+
 function onMapClick(clickedLatLng) {
   const { lat, lng } = clickedLatLng
   const name = prompt("Please enter a name")

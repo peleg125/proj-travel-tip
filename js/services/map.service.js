@@ -7,9 +7,10 @@ export const mapService = {
 }
 //
 // Var that is used throughout this Module (not global)
+import { locService } from "./loc.service.js"
 var gMap
 
-function initMap(lat = 32.0749831, lng = 34.9120554, onMapClick) {
+function initMap(lat = 32.0749831, lng = 34.9120554) {
   console.log("InitMap")
   return _connectGoogleApi().then(() => {
     console.log("google available")
@@ -18,11 +19,6 @@ function initMap(lat = 32.0749831, lng = 34.9120554, onMapClick) {
       zoom: 15,
     })
     console.log("Map!", gMap)
-    gMap.addListener("click", (mapsMouseEvent) => {
-      if (onMapClick) {
-        onMapClick(mapsMouseEvent.latLng.toJSON())
-      }
-    })
   })
 }
 
@@ -80,17 +76,22 @@ function addInfoWindow() {
 
 function getLocationByAddress(address) {
   // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
-  let geocoder = new google.maps.Geocoder()
-  geocoder.geocode({ address: address }, (results, status) => {
-    if (status === google.maps.GeocoderStatus.OK) {
-      if (results.length > 0) {
-        const location = results[0].geometry.location
-        const lat = location.lat()
-        const lng = location.lng()
-        console.log("address:", lat, lng)
-        panTo(lat, lng)
+  return new Promise((resolve, reject) => {
+    let geocoder = new google.maps.Geocoder()
+    geocoder.geocode({ address: address }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK) {
+        if (results.length > 0) {
+          const location = results[0].geometry.location
+          const lat = location.lat()
+          const lng = location.lng()
+          console.log("address:", address)
+          console.log("address:", lat, lng)
+          locService.addLocation({ address, lat, lng }).then((value) => {
+            console.log(value)
+          })
+          resolve({ lat, lng })
+        }
       }
-    }
+    })
   })
-  address = document.getElementById("search-address").value
 }
