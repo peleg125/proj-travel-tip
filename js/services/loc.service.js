@@ -7,7 +7,7 @@ export const locService = {
 	getLocationById,
 }
 import { utilsService } from "./utils.service.js"
-import { storageService } from "./storage.service.js"
+import { storageService } from "./async-storage.service.js"
 
 // const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
 
@@ -35,6 +35,7 @@ function addLocation({ name, lat, lng }) {
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	}
+	locs.push({ id, name, lat, lng, createdAt, updatedAt })
 	return storageService.post(ENTITY_TYPE, location)
 }
 
