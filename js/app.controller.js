@@ -13,7 +13,6 @@ function onInit() {
     .initMap()
     .then(() => {
       console.log("Map is ready")
-      return locService.getLocs()
     })
     .catch(() => console.log("Error: cannot init map"))
 }
@@ -34,7 +33,7 @@ function onAddMarker() {
 function onGetLocs() {
   locService.getLocs().then((locs) => {
     console.log("Locations:", locs)
-    renderTable(locs)
+    document.querySelector(".locs").innerText = JSON.stringify(locs, null, 2)
   })
 }
 
@@ -53,25 +52,4 @@ function onGetUserPos() {
 function onPanTo() {
   console.log("Panning the Map")
   mapService.panTo(35.6895, 139.6917)
-}
-
-function onGoTo(lat, lng) {
-  //   console.log(locService.getLocs())
-  mapService.panTo(lat, lng)
-}
-
-function renderTable(locs) {
-  var strHtmls = locs.map((loc) => {
-    return `
-    <tr>
-    <td data-id="${loc.id}">${loc.name}</td>
-    <td data-id="${loc.id}">${loc.lat}</td>
-    <td data-id="${loc.id}">${loc.lng}</td>
- <td data-id="${loc.id}"><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location"Go To>Go</button><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location"Go To>Delete</button></td>
-    </tr>
-        `
-  })
-  const elLocations = document.querySelector(".location-table")
-  elLocations.innerHTML += strHtmls.join("")
-  elLocations.hidden = false
 }

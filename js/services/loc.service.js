@@ -1,10 +1,19 @@
 export const locService = {
   getLocs,
+  addLocation,
+  updateLocation,
+  deleteLocation,
+  getLocations,
+  getLocationById,
 }
+import { utilsService } from "./utils.service.js"
+import { storageService } from "./storage.service.js"
+
+// const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
 
 const locs = [
-  { name: "Greatplace", lat: 32.047104, lng: 34.832384 },
-  { name: "Neveragain", lat: 32.047201, lng: 34.832581 },
+  { id: 12345, name: "Greatplace", lat: 32.047104, lng: 34.832384 },
+  { id: 123456, name: "Neveragain", lat: 32.047201, lng: 34.832581 },
 ]
 
 function getLocs() {
@@ -14,3 +23,46 @@ function getLocs() {
     }, 2000)
   })
 }
+
+const ENTITY_TYPE = "locations"
+
+function addLocation({ name, lat, lng }) {
+  const location = {
+    id: utilsService.makeId(),
+    name,
+    lat,
+    lng,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+  return storageService.post(ENTITY_TYPE, location)
+}
+
+function updateLocation(updatedLocation) {
+  updatedLocation.updatedAt = new Date()
+  return storageService.put(ENTITY_TYPE, updatedLocation)
+}
+
+function deleteLocation(id) {
+  return storageService.remove(ENTITY_TYPE, id)
+}
+
+function getLocations() {
+  return storageService.query(ENTITY_TYPE)
+}
+
+function getLocationById(id) {
+  return storageService.get(ENTITY_TYPE, id)
+}
+
+// function _getGeoLocation(lat, lng) {
+// 	console.log("from getGeolocation", lat, lng)
+// 	const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`
+// 	console.log("url", URL)
+
+// 	fetch(URL)
+// 		.then((jsonData) => jsonData.json())
+// 		.then((data) => {
+// 			console.log("From getGeoLocation", data)
+// 		})
+// }
