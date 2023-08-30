@@ -55,11 +55,3 @@ function getLocations() {
 function getLocationById(id) {
   return storageService.get(ENTITY_TYPE, id)
 }
-
-function getLocationByAddress(address) {
-  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
-  let geocoder = new google.maps.Geooder()
-
-  geocoder.geocode({ address })
-  let address = document.getElementById("address").value
-}

@@ -3,6 +3,7 @@ export const mapService = {
   addMarker,
   panTo,
   addInfoWindow,
+  getLocationByAddress,
 }
 
 //
@@ -71,4 +72,21 @@ function addInfoWindow() {
       resolve(mapsMouseEvent.latLng.toJSON())
     })
   })
+}
+
+function getLocationByAddress(address) {
+  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
+  let geocoder = new google.maps.Geocoder()
+  geocoder.geocode({ address: address }, (results, status) => {
+    if (status === google.maps.GeocoderStatus.OK) {
+      if (results.length > 0) {
+        const location = results[0].geometry.location
+        const lat = location.lat()
+        const lng = location.lng()
+        console.log("address:", lat, lng)
+        panTo(lat, lng)
+      }
+    }
+  })
+  address = document.getElementById("search-address").value
 }
