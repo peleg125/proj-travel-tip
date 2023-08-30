@@ -3,7 +3,7 @@ export const locService = {
   addLocation,
   updateLocation,
   deleteLocation,
-  getLocations,
+  getLocations: getLocationsFromDB,
   getLocationById,
 }
 import { utilsService } from "./utils.service.js"
@@ -27,16 +27,27 @@ function getLocs() {
 const ENTITY_TYPE = "locations"
 
 function addLocation({ name, lat, lng }) {
-  const location = {
-    id: utilsService.makeId(),
-    name,
-    lat,
-    lng,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
-  locs.push({ id, name, lat, lng, createdAt, updatedAt })
-  return storageService.post(ENTITY_TYPE, location)
+  return new Promise((resolve, reject) => {
+    const location = {
+      id: utilsService.makeId(),
+      name,
+      lat,
+      lng,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+    console.log("new locations", location)
+    locs.push(location)
+
+    storageService
+      .post(ENTITY_TYPE, location)
+      .then((storedLocation) => {
+        resolve(storedLocation)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
 }
 
 function updateLocation(updatedLocation) {
@@ -48,22 +59,10 @@ function deleteLocation(id) {
   return storageService.remove(ENTITY_TYPE, id)
 }
 
-function getLocations() {
+function getLocationsFromDB() {
   return storageService.query(ENTITY_TYPE)
 }
 
 function getLocationById(id) {
   return storageService.get(ENTITY_TYPE, id)
 }
-
-// function _getGeoLocation(lat, lng) {
-// 	console.log("from getGeolocation", lat, lng)
-// 	const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`
-// 	console.log("url", URL)
-
-// 	fetch(URL)
-// 		.then((jsonData) => jsonData.json())
-// 		.then((data) => {
-// 			console.log("From getGeoLocation", data)
-// 		})
-// }

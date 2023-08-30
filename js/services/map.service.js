@@ -9,7 +9,7 @@ export const mapService = {
 // Var that is used throughout this Module (not global)
 var gMap
 
-function initMap(lat = 32.0749831, lng = 34.9120554) {
+function initMap(lat = 32.0749831, lng = 34.9120554, onMapClick) {
   console.log("InitMap")
   return _connectGoogleApi().then(() => {
     console.log("google available")
@@ -18,6 +18,11 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
       zoom: 15,
     })
     console.log("Map!", gMap)
+    gMap.addListener("click", (mapsMouseEvent) => {
+      if (onMapClick) {
+        onMapClick(mapsMouseEvent.latLng.toJSON())
+      }
+    })
   })
 }
 
