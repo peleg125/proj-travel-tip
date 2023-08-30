@@ -12,11 +12,15 @@ function onInit() {
   mapService
     .initMap()
     .then(() => {
-      console.log("Map is ready")
+      return mapService.addInfoWindow()
+    })
+    .then((clickedLatLng) => {
+      const { lat, lng } = clickedLatLng
+      const name = prompt("Please enter a name")
+      locService.addLocation(name, lat, lng)
     })
     .catch(() => console.log("Error: cannot init map"))
 }
-
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
   console.log("Getting Pos")
@@ -67,4 +71,7 @@ function renderTable(locs) {
   const elLocations = document.querySelector(".location-table")
   elLocations.innerHTML += strHtmls.join("")
   elLocations.hidden = false
+}
+function onGoTo(lat, lng) {
+  mapService.panTo(lat, lng)
 }

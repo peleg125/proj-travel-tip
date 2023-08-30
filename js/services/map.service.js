@@ -48,3 +48,27 @@ function _connectGoogleApi() {
     elGoogleApi.onerror = () => reject("Google script failed to load")
   })
 }
+function addInfoWindow() {
+  return new Promise((resolve, reject) => {
+    let infoWindow = new google.maps.InfoWindow({
+      content: "Click the map to get Lat/Lng!",
+      position: gMap.getCenter(),
+    })
+
+    infoWindow.open(gMap)
+
+    gMap.addListener("click", (mapsMouseEvent) => {
+      infoWindow.close()
+
+      infoWindow = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+      })
+      infoWindow.setContent(
+        JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+      )
+      infoWindow.open(gMap)
+      console.log("latlng.tojson", mapsMouseEvent.latLng.toJSON())
+      resolve(mapsMouseEvent.latLng.toJSON())
+    })
+  })
+}
