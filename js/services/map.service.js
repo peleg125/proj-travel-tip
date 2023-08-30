@@ -49,6 +49,7 @@ function _connectGoogleApi() {
     elGoogleApi.onerror = () => reject("Google script failed to load")
   })
 }
+
 function addInfoWindow() {
   return new Promise((resolve, reject) => {
     let infoWindow = new google.maps.InfoWindow({
@@ -75,9 +76,8 @@ function addInfoWindow() {
 }
 
 function getLocationByAddress(address) {
-  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
+  let geocoder = new google.maps.Geocoder()
   return new Promise((resolve, reject) => {
-    let geocoder = new google.maps.Geocoder()
     geocoder.geocode({ address: address }, (results, status) => {
       if (status === google.maps.GeocoderStatus.OK) {
         if (results.length > 0) {
@@ -86,10 +86,13 @@ function getLocationByAddress(address) {
           const lng = location.lng()
           console.log("address:", address)
           console.log("address:", lat, lng)
-          locService.addLocation({ address, lat, lng }).then((value) => {
-            console.log(value)
-          })
-          resolve({ lat, lng })
+          locService
+            .addLocation({ address, lat, lng })
+            .then((value) => {
+              console.log(value)
+            })
+            .finally(resolve({ address, lat, lng }))
+          panTo(lat, lng)
         }
       }
     })

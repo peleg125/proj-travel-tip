@@ -94,8 +94,16 @@ function onSearch(ev) {
   console.log(ev)
   console.log("test")
   mapService.getLocationByAddress(elInputSearch.value).then((location) => {
-    console.log(location.lat)
-    mapService.panTo(location.lat, location.lng)
+    console.log(location)
+    locService
+      .addLocation({
+        name: location.address,
+        lat: location.lat,
+        lng: location.lng,
+      })
+      .then((value) => {
+        console.log(value)
+      })
   })
 }
 
@@ -113,11 +121,13 @@ function onMapClick(clickedLatLng) {
       })
   }
 }
+
 function onDelete(id) {
   locService.deleteLocation(id).then((data) => {
     console.log("Successfully deleted", data)
   })
 }
+
 function onCopyLink() {
   getPosition()
     .then(
