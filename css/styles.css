@@ -4,3 +4,11 @@ td {
 th {
     border: solid 1px black;
 }
+
+button {
+    border-radius: 1em;
+}
+
+body {
+    background-image: linear-gradient(-86deg,#1dacbe 0,#6d47c5 100%);
+}
