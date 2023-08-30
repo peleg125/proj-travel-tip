@@ -11,10 +11,10 @@ import { storageService } from "./async-storage.service.js"
 
 const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
 
-const locs = [
-  { id: 12345, name: "Greatplace", lat: 32.047104, lng: 34.832384 },
-  { id: 123456, name: "Neveragain", lat: 32.047201, lng: 34.832581 },
-]
+// const locs = [
+//   { id: 12345, name: "Greatplace", lat: 32.047104, lng: 34.832384 },
+//   { id: 123456, name: "Neveragain", lat: 32.047201, lng: 34.832581 },
+// ]
 
 function getLocs() {
   return new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ function addLocation({ name, lat, lng }) {
       updatedAt: new Date(),
     }
     console.log("new locations", location)
-    locs.push(location)
+    // locs.push(location)
 
     storageService
       .post(ENTITY_TYPE, location)
@@ -67,10 +67,10 @@ function getLocationById(id) {
   return storageService.get(ENTITY_TYPE, id)
 }
 
-function getLocationByAddress(address) {
-  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
-  let geocoder = new google.maps.Geooder()
+// function getLocationByAddress(address) {
+//   // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
+//   let geocoder = new google.maps.Geooder()
 
-  geocoder.geocode({ address })
-  let address = document.getElementById("address").value
-}
+//   geocoder.geocode({ address })
+//   let address = document.getElementById("address").value
+// }

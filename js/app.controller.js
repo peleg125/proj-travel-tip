@@ -8,7 +8,7 @@ window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onGoTo = onGoTo
 window.onSearch = onSearch
-
+window.onDelete = onDelete
 function onInit() {
   mapService
     .initMap(32.0749831, 34.9120554, onMapClick)
@@ -31,9 +31,16 @@ function onAddMarker() {
 }
 
 function onGetLocs() {
-  locService.getLocs().then((locs) => {
-    console.log("Locations:", locs)
-    renderTable(locs)
+  locService.getLocations().then((locs) => {
+    if (locs && locs.length > 0) {
+      console.log("from onGetLocs, getlocationsfromDB", locs)
+      renderTable(locs)
+    } else {
+      locService.getLocs().then((locs) => {
+        console.log("fromgetLocs, not from DB", locs)
+        renderTable(locs)
+      })
+    }
   })
 }
 
@@ -57,10 +64,13 @@ function renderTable(locs) {
   var strHtmls = locs.map((loc) => {
     return `
       <tr>
-      <td data-id="${loc.id}">${loc.name}</td>
-      <td data-id="${loc.id}">${loc.lat}</td>
-      <td data-id="${loc.id}">${loc.lng}</td>
-   <td data-id="${loc.id}"><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location"Go To>Go</button><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location"Go To>Delete</button></td>
+      <td>${loc.name}</td>
+      <td>${loc.lat}</td>
+      <td>${loc.lng}</td>
+
+   <td><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location">Go</button>
+
+   <button onclick="onDelete("${loc.id}")" class="del-btn">Delete</button></td>
       </tr>
           `
   })
@@ -87,4 +97,9 @@ function onMapClick(clickedLatLng) {
         console.error("Failed to add location:", error)
       })
   }
+}
+function onDelete(id) {
+  locService.deleteLocation(id).then((data) => {
+    console.log("Successfully deleted", data)
+  })
 }
