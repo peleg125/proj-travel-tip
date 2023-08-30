@@ -5,7 +5,6 @@ export const mapService = {
   addInfoWindow,
   getLocationByAddress,
 }
-
 //
 // Var that is used throughout this Module (not global)
 var gMap

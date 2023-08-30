@@ -19,7 +19,10 @@ const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
 function getLocs() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(locs)
+      resolve([
+        { id: 12345, name: "Fake", lat: 32.047104, lng: 34.832384 },
+        { id: 123456, name: "Data", lat: 32.047201, lng: 34.832581 },
+      ])
     }, 2000)
   })
 }
@@ -37,7 +40,6 @@ function addLocation({ name, lat, lng }) {
       updatedAt: new Date(),
     }
     console.log("new locations", location)
-    // locs.push(location)
 
     storageService
       .post(ENTITY_TYPE, location)

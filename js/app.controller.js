@@ -9,9 +9,16 @@ window.onGetUserPos = onGetUserPos
 window.onGoTo = onGoTo
 window.onSearch = onSearch
 window.onDelete = onDelete
+window.onCopyLink = onCopyLink
+
 function onInit() {
+  const urlParams = new URLSearchParams(window.location.search)
+  const lat = +urlParams.get("lat") || 32.0749831
+  const lng = +urlParams.get("lng") || 34.9120554
+  console.log(urlParams, lat, lng)
+
   mapService
-    .initMap(32.0749831, 34.9120554, onMapClick)
+    .initMap(lat, lng, onMapClick)
     .then(() => {
       return mapService.addInfoWindow()
     })
@@ -51,43 +58,36 @@ function onGetUserPos() {
       document.querySelector(
         ".user-pos"
       ).innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+      mapService.panTo(pos.coords.latitude, pos.coords.longitude)
     })
     .catch((err) => {
       console.log("err!!!", err)
     })
 }
-
 function onPanTo() {
   console.log("Panning the Map")
   mapService.panTo(35.6895, 139.6917)
 }
-
 function renderTable(locs) {
   var strHtmls = locs.map((loc) => {
     return `
-      <tr>
-      <td>${loc.name}</td>
-      <td>${loc.lat}</td>
-      <td>${loc.lng}</td>
-
-   <td><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location">Go</button>
-
-   <button onclick="onDelete("${loc.id}")" class="del-btn">Delete</button></td>
-      </tr>
-          `
+        <tr>
+        <td>${loc.name}</td>
+        <td>${loc.lat}</td>
+        <td>${loc.lng}</td>
+        <td><button onclick="onGoTo(${loc.lat}, ${loc.lng})" class="go-to-location">Go</button>
+        <button onclick="onDelete('${loc.id}')" class="del-btn">Delete</button></td>
+        </tr>`
   })
   const elLocations = document.querySelector(".location-table")
-  elLocations.innerHTML += strHtmls.join("")
+  elLocations.innerHTML = strHtmls.join("")
   elLocations.hidden = false
 }
 function onGoTo(lat, lng) {
   mapService.panTo(lat, lng)
 }
 function onSearch(ev) {
-  if (ev) ev.preventDefault()
-  console.log("test")
-  const elInputSearch = document.querySelector("#search-address")
-  mapService.getLocationByAddress(elInputSearch.value)
+  const elInputSearch = document.querySelector("input")
 }
 function onMapClick(clickedLatLng) {
   const { lat, lng } = clickedLatLng
@@ -107,4 +107,18 @@ function onDelete(id) {
   locService.deleteLocation(id).then((data) => {
     console.log("Successfully deleted", data)
   })
+}
+function onCopyLink() {
+  getPosition()
+    .then(
+      (pos) =>
+        `https://peleg125.github.io/proj-travel-tip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`
+    )
+    .then((url) => navigator.clipboard.writeText(url))
+    .then(() => {
+      alert("Link copied to clipboard")
+    })
+    .catch((err) => {
+      console.error("Could not complete operation: ", err)
+    })
 }
