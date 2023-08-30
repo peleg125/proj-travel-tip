@@ -11,14 +11,9 @@ window.onSearch = onSearch
 
 function onInit() {
   mapService
-    .initMap()
+    .initMap(32.0749831, 34.9120554, onMapClick)
     .then(() => {
       return mapService.addInfoWindow()
-    })
-    .then((clickedLatLng) => {
-      const { lat, lng } = clickedLatLng
-      const name = prompt("Please enter a name")
-      locService.addLocation(name, lat, lng)
     })
     .catch(() => console.log("Error: cannot init map"))
 }
@@ -78,10 +73,23 @@ function renderTable(locs) {
 function onGoTo(lat, lng) {
   mapService.panTo(lat, lng)
 }
-
 function onSearch(ev) {
   if (ev) ev.preventDefault()
   console.log("test")
   const elInputSearch = document.querySelector("#search-address")
   mapService.getLocationByAddress(elInputSearch.value)
+}
+function onMapClick(clickedLatLng) {
+  const { lat, lng } = clickedLatLng
+  const name = prompt("Please enter a name")
+  if (name) {
+    locService
+      .addLocation({ name, lat, lng })
+      .then((locationData) => {
+        console.log("Location added successfully:", locationData)
+      })
+      .catch((error) => {
+        console.error("Failed to add location:", error)
+      })
+  }
 }

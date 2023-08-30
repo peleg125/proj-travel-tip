@@ -3,7 +3,7 @@ export const locService = {
   addLocation,
   updateLocation,
   deleteLocation,
-  getLocations,
+  getLocations: getLocationsFromDB,
   getLocationById,
 }
 import { utilsService } from "./utils.service.js"
@@ -27,16 +27,27 @@ function getLocs() {
 const ENTITY_TYPE = "locations"
 
 function addLocation({ name, lat, lng }) {
-  const location = {
-    id: utilsService.makeId(),
-    name,
-    lat,
-    lng,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
-  locs.push({ id, name, lat, lng, createdAt, updatedAt })
-  return storageService.post(ENTITY_TYPE, location)
+  return new Promise((resolve, reject) => {
+    const location = {
+      id: utilsService.makeId(),
+      name,
+      lat,
+      lng,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+    console.log("new locations", location)
+    locs.push(location)
+
+    storageService
+      .post(ENTITY_TYPE, location)
+      .then((storedLocation) => {
+        resolve(storedLocation)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
 }
 
 function updateLocation(updatedLocation) {
@@ -48,7 +59,7 @@ function deleteLocation(id) {
   return storageService.remove(ENTITY_TYPE, id)
 }
 
-function getLocations() {
+function getLocationsFromDB() {
   return storageService.query(ENTITY_TYPE)
 }
 
