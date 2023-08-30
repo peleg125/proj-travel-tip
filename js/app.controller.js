@@ -7,6 +7,7 @@ window.onPanTo = onPanTo
 window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onGoTo = onGoTo
+window.onSearch = onSearch
 
 function onInit() {
   mapService
@@ -74,4 +75,8 @@ function renderTable(locs) {
 }
 function onGoTo(lat, lng) {
   mapService.panTo(lat, lng)
+}
+
+function onSearch(ev) {
+  const elInputSearch = document.querySelector("input")
 }

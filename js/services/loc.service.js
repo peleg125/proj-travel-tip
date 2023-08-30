@@ -9,7 +9,7 @@ export const locService = {
 import { utilsService } from "./utils.service.js"
 import { storageService } from "./async-storage.service.js"
 
-// const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
+const API_KEY = "AIzaSyAtf75eiyH_FG5ADvX6NtWkcLWFTMhr230"
 
 const locs = [
   { id: 12345, name: "Greatplace", lat: 32.047104, lng: 34.832384 },
@@ -56,14 +56,10 @@ function getLocationById(id) {
   return storageService.get(ENTITY_TYPE, id)
 }
 
-// function _getGeoLocation(lat, lng) {
-// 	console.log("from getGeolocation", lat, lng)
-// 	const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`
-// 	console.log("url", URL)
+function getLocationByAddress(address) {
+  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
+  let geocoder = new google.maps.Geooder()
 
-// 	fetch(URL)
-// 		.then((jsonData) => jsonData.json())
-// 		.then((data) => {
-// 			console.log("From getGeoLocation", data)
-// 		})
-// }
+  geocoder.geocode({ address })
+  let address = document.getElementById("address").value
+}
